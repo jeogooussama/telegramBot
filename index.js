@@ -3,7 +3,7 @@ const axios = require("axios");
 const TelegramBot = require("node-telegram-bot-api");
 
 // Define the Telegram bot token
-const telegram_bot_token = "6043532874:AAE0LSyyLnXaaels5ITspQ3XYbbn34L5TrU";
+const telegram_bot_token = "6043532874:AAFDmSDHKUp1RELCyQK1r6kEuq-AKDGNrTQ";
 
 // Define the API endpoint and parameters
 const url = "https://www.stands4.com/services/v2/quotes.php";
