@@ -30,13 +30,13 @@ app.post("/", (req, res) => {
 });
 
 // Set up interval for sending quotes
-const interval = 1500000; // 25 minutes
+const interval = 1200000; // 20 minutes
 let timerId = null;
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
   await bot.sendMessage(
     chatId,
-    "Hold on, I will send you a quote every 25 minutes!"
+    "Hold on, I will send you a quote every 20 minutes!"
   );
   // Send the first quote immediately
   await sendQuote(chatId);
