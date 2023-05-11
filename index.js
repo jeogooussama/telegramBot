@@ -30,7 +30,7 @@ app.post("/", (req, res) => {
 });
 
 // Set up interval for sending quotes
-const interval = 1500000 ; // 25 minutes
+const interval = 1500000; // 25 minutes
 let timerId = null;
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
