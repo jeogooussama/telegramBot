@@ -6,13 +6,13 @@ const TelegramBot = require("node-telegram-bot-api");
 const telegram_bot_token = "6043532874:AAFcdKml00_YE2T2vSiNzbvv5RQsY5mvgw8";
 
 // Define the API endpoint and parameters
-const url = "https://www.stands4.com/services/v2/quotes.php";
-const params = {
-  uid: "11656",
-  tokenid: "Mx4CUF0ZHeZcvbPy",
-  searchtype: "RANDOM",
-  format: "json",
-};
+const url = "http://quotable.io/random";
+// const params = {
+//   uid: "11656",
+//   tokenid: "Mx4CUF0ZHeZcvbPy",
+//   searchtype: "RANDOM",
+//   format: "json",
+// };
 // Set up Telegram bot
 const bot = new TelegramBot(telegram_bot_token, { polling: true });
 
@@ -53,9 +53,9 @@ bot.onText(/\/stop/, async (msg) => {
 // Define function to send a quote to the user
 async function sendQuote(chatId) {
   try {
-    const response = await axios.get(url, { params });
-    const quote = response.data.result.quote;
-    const author = response.data.result.author;
+    const response = await axios.get(url);
+    const quote = response.data.content;
+    const author = response.data.author;
     const telegram_message = `Here's a quote for you:\n\n${quote}\n- ${author}`;
     await bot.sendMessage(chatId, telegram_message);
   } catch (error) {
