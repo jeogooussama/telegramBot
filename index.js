@@ -26,16 +26,16 @@ app.post("/", async (req, res) => {
 });
 
 // Set up interval for sending quotes
-const interval = 1200000; // 20 minutes
+const INTERVAL = 1200000; // 20 minutes
 let timerId = null;
 
 // Define function to send a quote to the user
 async function sendQuote(chatId) {
   try {
     const response = await axios.get(url);
-    const quote = response.data.quote;
-    const author = response.data.author;
-    const telegram_message = `Here's a quote for you:\n\n${quote}\n- ${author}`;
+    const quoteText = response.data.quote;
+    const quoteAuthor = response.data.author;
+    const telegram_message = `Here's a quote for you:\n\n${quoteText}\n- ${quoteAuthor}`;
     await bot.sendMessage(chatId, telegram_message);
   } catch (error) {
     console.log(error);
@@ -54,7 +54,7 @@ bot.onText(/\/start/, async (msg) => {
   // Set up interval for sending subsequent quotes
   timerId = setInterval(() => {
     sendQuote(chatId);
-  }, interval);
+  }, INTERVAL);
 });
 bot.onText(/\/stop/, async (msg) => {
   clearInterval(timerId);
