@@ -6,21 +6,17 @@ const TelegramBot = require("node-telegram-bot-api");
 const telegram_bot_token = "6043532874:AAFcdKml00_YE2T2vSiNzbvv5RQsY5mvgw8";
 
 // Define the API endpoint and parameters
-const url = "http://quotable.io/random";
-// const params = {
-//   uid: "11656",
-//   tokenid: "Mx4CUF0ZHeZcvbPy",
-//   searchtype: "RANDOM",
-//   format: "json",
-// };
+const url = "https://api.thequotes.com/v1/quotes/random";
+
 // Set up Telegram bot
 const bot = new TelegramBot(telegram_bot_token, { polling: true });
 
 // Set up Express server
 const app = express();
 const port = 3000;
+
 // Set up endpoint for Telegram webhook
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
   try {
     bot.processUpdate(req.body);
     res.sendStatus(200);
@@ -32,6 +28,21 @@ app.post("/", (req, res) => {
 // Set up interval for sending quotes
 const interval = 1200000; // 20 minutes
 let timerId = null;
+
+// Define function to send a quote to the user
+async function sendQuote(chatId) {
+  try {
+    const response = await axios.get(url);
+    const quote = response.data.quote;
+    const author = response.data.author;
+    const telegram_message = `Here's a quote for you:\n\n${quote}\n- ${author}`;
+    await bot.sendMessage(chatId, telegram_message);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// Handle commands
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
   await bot.sendMessage(
@@ -49,19 +60,6 @@ bot.onText(/\/stop/, async (msg) => {
   clearInterval(timerId);
   await bot.sendMessage(msg.chat.id, "Okay, I won't send you any more quotes.");
 });
-
-// Define function to send a quote to the user
-async function sendQuote(chatId) {
-  try {
-    const response = await axios.get(url);
-    const quote = response.data.content;
-    const author = response.data.author;
-    const telegram_message = `Here's a quote for you:\n\n${quote}\n- ${author}`;
-    await bot.sendMessage(chatId, telegram_message);
-  } catch (error) {
-    bot.on("polling_error", (msg) => console.log(msg));
-  }
-}
 
 // Start listening on port 3000
 app.listen(port, () => {
