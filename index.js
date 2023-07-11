@@ -48,16 +48,26 @@ bot.onText(/\/stop/, (msg) => {
 });
 
 // Define function to send a quote to the user
+// Define function to send a quote to the user
 async function sendQuote(chatId) {
   try {
     const response = await axios.get(url);
     const { content, author } = response.data;
-    const telegram_message = `Here's a quote for you:\n\n${content}\n- ${author}`;
-    bot.sendMessage(chatId, telegram_message);
+    const tags = response.data.tags;
+
+    // Check if the quote contains tags related to love or peace
+    if (tags.includes("love") || tags.includes("peace")) {
+      const telegram_message = `Here's a quote about love and peace:\n\n${content}\n- ${author}`;
+      bot.sendMessage(chatId, telegram_message);
+    } else {
+      // If the quote does not match the criteria, send another quote
+      sendQuote(chatId);
+    }
   } catch (error) {
     console.log(error);
   }
 }
+
 
 // Start listening on port 3000
 app.listen(port, () => {
